@@ -1,0 +1,29 @@
+version: '3.7'
+
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: aulinha-legal
+      MYSQL_USER: aulinha
+      MYSQL_PASSWORD: aulinha
+    ports:
+      - 3306:3306
+    volumes:
+      - $PWD/data:/var/lib/mysql
+  app:
+    image: node:12-alpine
+    environment:
+      MYSQL_USER: aulinha
+      MYSQL_PASSWORD: aulinha
+      MYSQL_DATABASE: aulinha-legal
+      MYSQL_HOST: db
+    depends_on:
+      - db
+    ports:
+      - 3000:3000
+    working_dir: /app
+    volumes:
+      - $PWD/app:/app
+    command: ["node", "/app/index.js"]
